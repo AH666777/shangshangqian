@@ -10,9 +10,12 @@
 //   5. unlockAchievement：写入已解锁的成就（幂等，重复上报不会重复落库）
 //   6. getAchievements：拉取该用户全部已解锁成就
 //
-// 注意：本 AppID 是微信小程序（wxa12c08e1f80c7b86），但云空间跑在支付宝云上。
+// 注意：目标平台是微信小程序，但云空间跑在支付宝云上，
 // 因此云函数环境里没有自动注入 AppSecret，必须手动在「云函数配置 → 环境变量」
-// 里设置 WX_APPID 和 WX_APPSECRET。
+// 里设置 WX_APPID 和 WX_APPSECRET（本地调试读同目录 .env）。
+//
+// WX_APPID 必须与 project.config.json / src/manifest.json 的 appid 一致（wx5a7366b5deaa5ac8），
+// 否则换取 openid 时会返回 40029 invalid code。
 
 const got = require('got');
 const db = uniCloud.database();
