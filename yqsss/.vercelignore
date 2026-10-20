@@ -1,0 +1,10 @@
+node_modules
+package-lock.json
+tailwind.config.js
+css/tailwind-input.css
+package.json
+.gitignore
+.vercelignore
+README.md
+supabase_schema.sql
+tests

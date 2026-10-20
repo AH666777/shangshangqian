@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "primaryKey": "_id",
+  "title": "成就解锁表",
+  "description": "用户已解锁的成就，按 openid + achievementId 唯一，跨设备同步用",
+  "properties": {
+    "_id": {
+      "bsonType": "string",
+      "description": "系统主键"
+    },
+    "openid": {
+      "bsonType": "string",
+      "description": "归属用户 openid"
+    },
+    "achievementId": {
+      "bsonType": "string",
+      "description": "成就 id，与前端 src/core/achievements.js 的 ACHIEVEMENTS[].id 一一对应"
+    },
+    "unlockedAt": {
+      "bsonType": "long",
+      "description": "解锁时间戳（毫秒）"
+    }
+  }
+}

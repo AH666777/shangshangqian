@@ -1,0 +1,19 @@
+{
+  "name": "一键上上签",
+  "short_name": "上上签",
+  "description": "国风趣味抽签，摇一摇遇见好运气",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a0a2e",
+  "theme_color": "#1a0a2e",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "/assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

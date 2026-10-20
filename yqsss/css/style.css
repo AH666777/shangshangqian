@@ -1,0 +1,355 @@
+/* ============================================
+   一键上上签 - 自定义样式
+   ============================================ */
+
+/* 基础重置 */
+*,
+*::before,
+*::after {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-user-drag: none !important;
+}
+
+*:focus,
+*:focus-visible,
+*:active {
+  outline: none !important;
+  -webkit-outline: none !important;
+}
+
+button,
+a,
+[onclick],
+[tabindex] {
+  -webkit-tap-highlight-color: transparent !important;
+  outline: none !important;
+  -webkit-appearance: none !important;
+}
+
+/* 全面重置 <button> 默认外观：
+   - background: 透明，替换 Chromium UA 的 rgb(239,239,239)
+   - border: 0 solid → 宽度归零、style 设为 solid，
+     这样 Tailwind 的 .border / .border-N / .border-{color} (0,1,0)
+     才能正常盖住并渲染出可见边框
+   - padding/margin/font/color 全部 inherit，避免浏览器默认样式
+   - appearance: none，去掉 iOS/macOS 系统按钮外观
+   特异度 (0,0,1)：压过 UA 样式表，但低于 Tailwind 的 .bg-*/.border-*/.text-* (0,1,0)，
+   所以已显式设置的样式（金/红渐变、白边框、自定义颜色）都不受影响。 */
+button {
+  background: transparent;
+  border: 0 solid;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+button:focus,
+button:focus-visible,
+a:focus,
+a:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 页面切换动画 */
+.page {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;
+}
+
+.page.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.page.hidden {
+  display: none !important;
+}
+
+/* 场景按钮选中态 */
+.scene-btn.scene-active {
+  border-color: rgba(212, 160, 23, 0.8) !important;
+  background: rgba(212, 160, 23, 0.12) !important;
+  box-shadow: 0 0 20px rgba(212, 160, 23, 0.25);
+}
+
+/* 未选中态 */
+.scene-btn:not(.scene-active) {
+  border-color: transparent !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  box-shadow: none !important;
+}
+
+/* 按钮点击时禁用系统高亮 */
+.scene-btn,
+#btn-start,
+#barrel-container,
+#poster-preview,
+.analysis-card,
+.history-item {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+}
+
+.scene-btn:active,
+#btn-start:active,
+#barrel-container:active {
+  -webkit-tap-highlight-color: transparent !important;
+  background-image: none !important;
+}
+
+/* 签筒摇动动画
+   注意：关键帧必须定义在本文件中，不能只写在 tailwind.config.js 里。
+   Tailwind 只会在页面真正用到 animate-xxx 工具类时才输出对应 @keyframes，
+   #barrel.shaking 属于自定义 CSS 引用，因此这里显式声明。 */
+#barrel.shaking {
+  animation: shake 0.5s ease-in-out 3;
+  transform-origin: 50% 90%;
+}
+
+#barrel.shaking .stick {
+  animation: stickShake 0.15s ease-in-out infinite;
+}
+
+@keyframes shake {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-12deg); }
+  40% { transform: rotate(10deg); }
+  60% { transform: rotate(-6deg); }
+  80% { transform: rotate(4deg); }
+}
+
+@keyframes stickShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+/* 签筒光效 */
+#barrel-glow.visible {
+  display: block !important;
+  animation: glow-pulse 1s ease-in-out;
+}
+
+@keyframes glow-pulse {
+  0% { opacity: 0; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.5); }
+  100% { opacity: 0; transform: scale(1); }
+}
+
+/* 粒子特效（撒花） */
+.particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 60;
+  animation: particle 1.5s ease-out forwards;
+}
+
+@keyframes particle {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--tx, 0), var(--ty, 0)) scale(0); opacity: 0; }
+}
+
+/* 背景装饰粒子 */
+.bg-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: bgFloat 6s ease-in-out infinite;
+}
+
+@keyframes bgFloat {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+  25% { transform: translateY(-20px) translateX(10px); opacity: 0.6; }
+  50% { transform: translateY(-10px) translateX(-10px); opacity: 0.4; }
+  75% { transform: translateY(-30px) translateX(5px); opacity: 0.5; }
+}
+
+/* 签文等级颜色 */
+.level-上上签 {
+  background: linear-gradient(135deg, #FF6B35, #C41E3A);
+  color: #FFE0B2;
+  text-shadow: 0 0 10px rgba(255,107,53,0.5);
+}
+
+.level-上吉签 {
+  background: linear-gradient(135deg, #D4A017, #FF8F00);
+  color: #FFF8E1;
+  text-shadow: 0 0 10px rgba(212,160,23,0.5);
+}
+
+.level-中平签 {
+  background: linear-gradient(135deg, #2E7D32, #4CAF50);
+  color: #E8F5E9;
+  text-shadow: 0 0 10px rgba(46,125,50,0.5);
+}
+
+/* 合规：原「下吉签」已中性化为「蓄力签」（计划书 §1.6）。
+   两条规则共用同一配色，.level-下吉签 仅为兼容用户设备上的历史本地数据而保留。 */
+.level-蓄力签,
+.level-下吉签 {
+  background: linear-gradient(135deg, #1565C0, #42A5F5);
+  color: #E3F2FD;
+  text-shadow: 0 0 10px rgba(21,101,192,0.5);
+}
+
+/* 解签维度卡片 */
+.analysis-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.analysis-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(212, 160, 23, 0.3);
+}
+
+/* 历史记录卡片 */
+.history-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.history-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ========== 海报图片（用于长按保存 / 分享） ==========
+   全局样式在文件顶部对所有元素关闭了长按呼出菜单（-webkit-touch-callout: none），
+   这会直接导致微信 / iOS 无法长按保存海报图片，因此此处必须放开。 */
+.poster-image {
+  display: block;
+  width: 100%;
+  -webkit-touch-callout: default !important;
+  -webkit-user-select: auto !important;
+  user-select: auto !important;
+  -webkit-user-drag: auto !important;
+  pointer-events: auto;
+}
+
+/* 用 .hidden 工具类收起时，需覆盖上面的 display:block */
+.poster-image.hidden {
+  display: none;
+}
+
+/* 深度解签文本块 */
+.deep-analysis-card {
+  background: rgba(212, 160, 23, 0.08);
+  border: 1px solid rgba(212, 160, 23, 0.25);
+  border-radius: 1rem;
+  padding: 1rem 1.15rem;
+}
+
+.deep-analysis-card p {
+  font-size: 0.8125rem;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.78);
+  white-space: pre-line;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 160, 23, 0.3);
+  border-radius: 4px;
+}
+
+/* 移动端摇晃提示 */
+@media (max-width: 768px) {
+  #shake-hint-mobile {
+    display: block !important;
+  }
+}
+
+/* 安全区域适配 */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  #app {
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* ========== 登录/注册弹窗 ========== */
+#auth-modal {
+  animation: modalOverlayIn 0.25s ease-out;
+}
+
+#auth-modal > div {
+  animation: modalCardIn 0.3s ease-out;
+}
+
+@keyframes modalOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalCardIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+#auth-modal input {
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#auth-modal input:focus {
+  border-color: rgba(212, 160, 23, 0.6);
+  box-shadow: 0 0 0 1px rgba(212, 160, 23, 0.3);
+}
+
+/* ========== 个人主页 ========== */
+.profile-date-group {
+  margin-bottom: 0.75rem;
+}
+
+.profile-date-group:last-child {
+  margin-bottom: 0;
+}
+
+/* 个人主页历史记录拖拽禁用 */
+#profile-history-list {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* 输入框placeholder颜色增强 */
+input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* 按钮加载态 */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

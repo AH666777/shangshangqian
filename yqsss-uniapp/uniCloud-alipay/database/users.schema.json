@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "primaryKey": "_id",
+  "title": "用户档案表",
+  "description": "微信小程序登录的真实用户档案，按 openid 索引",
+  "properties": {
+    "_id": {
+      "bsonType": "string",
+      "description": "系统主键"
+    },
+    "openid": {
+      "bsonType": "string",
+      "description": "微信 openid，用户唯一身份标识"
+    },
+    "unionid": {
+      "bsonType": "string",
+      "description": "微信 unionid，多端共享时使用",
+      "defaultValue": ""
+    },
+    "nickname": {
+      "bsonType": "string",
+      "description": "用户昵称",
+      "defaultValue": "微信用户"
+    },
+    "avatar": {
+      "bsonType": "string",
+      "description": "头像 URL",
+      "defaultValue": ""
+    },
+    "loginType": {
+      "bsonType": "string",
+      "description": "登录方式：wechat / nickname",
+      "defaultValue": "wechat"
+    },
+    "points": {
+      "bsonType": "int",
+      "description": "积分余额",
+      "defaultValue": 0
+    },
+    "totalDraws": {
+      "bsonType": "int",
+      "description": "累计抽签次数",
+      "defaultValue": 0
+    },
+    "drawDays": {
+      "bsonType": "int",
+      "description": "累计抽签天数（有抽签行为的自然日）",
+      "defaultValue": 0
+    },
+    "lastDrawDate": {
+      "bsonType": "string",
+      "description": "最近抽签日期 YYYY-MM-DD，用于判定跨天",
+      "defaultValue": ""
+    },
+    "streakDays": {
+      "bsonType": "int",
+      "description": "连续抽签天数（断签归零），成就「连续三日/七日/风雨无阻」用",
+      "defaultValue": 0
+    },
+    "createdAt": {
+      "bsonType": "long",
+      "description": "注册时间戳（毫秒）"
+    },
+    "lastLoginAt": {
+      "bsonType": "long",
+      "description": "最近登录时间戳（毫秒）"
+    }
+  }
+}

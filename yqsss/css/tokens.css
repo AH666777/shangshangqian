@@ -1,0 +1,99 @@
+/* ============================================
+   一键上上签 - 设计令牌（CSS 变量清单）
+   ============================================
+   计划书 §6.5-6：建立设计令牌（颜色/字号/间距）清单，直接映射为 uni.scss。
+
+   本文件与 js/core/tokens.js 一一对应，是同一套令牌的 CSS 侧表达：
+     - H5  ：本文件（CSS 变量）
+     - 小程序：迁移为 uni.scss 变量
+     - Canvas：迁移为 js/core/tokens.js
+
+   引入顺序必须早于 style.css（见 index.html），
+   后续 style.css 可按需逐步把硬编码色值替换为 var(--token)，属增量迁移，
+   当前不影响任何既有视觉表现。
+   ============================================ */
+
+:root {
+  /* ---------- 品牌金 ---------- */
+  --color-gold-50: #FFF9E6;
+  --color-gold-100: #FFF3CC;
+  --color-gold-200: #FFE799;
+  --color-gold-300: #FFDB66;
+  --color-gold-400: #FFD133;
+  --color-gold-500: #FFC107;
+  --color-gold-600: #D4A005;
+  --color-gold-700: #A87F04;
+  --color-gold-800: #7C5E03;
+  --color-gold-900: #503C02;
+
+  /* ---------- 签文等级主色 ---------- */
+  --color-fortune-red: #C41E3A;
+  --color-fortune-gold: #D4A017;
+  --color-fortune-green: #2E7D32;
+  --color-fortune-blue: #1565C0;
+  --color-fortune-purple: #7B1FA2;
+
+  /* ---------- 等级徽章渐变端点与文字色（对应 style.css .level-*） ---------- */
+  --level-top-gradient-start: #FF6B35;
+  --level-top-gradient-end: #C41E3A;
+  --level-top-text: #FFE0B2;
+  --level-good-gradient-start: #D4A017;
+  --level-good-gradient-end: #FF8F00;
+  --level-good-text: #FFF8E1;
+  --level-mid-gradient-start: #2E7D32;
+  --level-mid-gradient-end: #4CAF50;
+  --level-mid-text: #E8F5E9;
+  --level-low-gradient-start: #1565C0;
+  --level-low-gradient-end: #42A5F5;
+  --level-low-text: #E3F2FD;
+  --level-fallback: #666666;
+
+  /* ---------- 页面背景 ---------- */
+  --color-bg-deep: #1a0a2e;
+  --color-bg-mid: #2d1b4e;
+  --color-bg-deepest: #0d0517;
+
+  /* ---------- 签筒 ---------- */
+  --color-barrel-top: #8B4513;
+  --color-barrel-mid: #A0522D;
+  --color-barrel-bottom: #6B3410;
+  --color-barrel-border: #5C2D0E;
+  --color-stick-a: #F5DEB3;
+  --color-stick-b: #FAEBD7;
+
+  /* ---------- 中性色 ---------- */
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+
+  /* ---------- 字体 ---------- */
+  --font-brush: "STKaiti", "KaiTi", "楷体", serif;
+  --font-display: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+
+  /* ---------- 圆角 ---------- */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* ---------- 字号 ---------- */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-4xl: 2.25rem;
+
+  /* ---------- 间距 ---------- */
+  --space-0-5: 0.125rem;
+  --space-1: 0.25rem;
+  --space-1-5: 0.375rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+}

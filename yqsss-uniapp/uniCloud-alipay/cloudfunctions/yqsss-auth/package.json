@@ -1,0 +1,18 @@
+{
+  "name": "yqsss-auth",
+  "version": "1.0.0",
+  "description": "一键上上签 - 微信登录",
+  "main": "index.js",
+  "dependencies": {
+    "got": "^11.8.5"
+  },
+  "extensions": {
+    "uni-cloud-jql": true
+  },
+  "cloudfunction-config": {
+    "concurrency": 10,
+    "memorySize": 256,
+    "timeout": 10,
+    "triggers": []
+  }
+}

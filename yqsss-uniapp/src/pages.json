@@ -1,0 +1,52 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "一键上上签"
+      }
+    },
+    {
+      "path": "pages/shake/shake",
+      "style": {
+        "navigationBarTitleText": "摇签"
+      }
+    },
+    {
+      "path": "pages/result/result",
+      "style": {
+        "navigationBarTitleText": "解签"
+      }
+    },
+    {
+      "path": "pages/poster/poster",
+      "style": {
+        "navigationBarTitleText": "分享海报"
+      }
+    },
+    {
+      "path": "pages/history/history",
+      "style": {
+        "navigationBarTitleText": "历史签文"
+      }
+    },
+    {
+      "path": "pages/profile/profile",
+      "style": {
+        "navigationBarTitleText": "个人主页"
+      }
+    },
+    {
+      "path": "pages/achievement/achievement",
+      "style": {
+        "navigationBarTitleText": "我的成就"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "一键上上签",
+    "navigationBarBackgroundColor": "#1a0a2e",
+    "backgroundColor": "#1a0a2e"
+  }
+}

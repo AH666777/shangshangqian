@@ -1,0 +1,144 @@
+{
+  "users": {
+    "data": [],
+    "schema": {
+      "version": 1,
+      "primaryKey": "_id",
+      "title": "用户档案表",
+      "description": "微信小程序登录的真实用户档案，按 openid 索引",
+      "properties": {
+        "_id": {
+          "bsonType": "string",
+          "description": "系统主键"
+        },
+        "openid": {
+          "bsonType": "string",
+          "description": "微信 openid，用户唯一身份标识"
+        },
+        "unionid": {
+          "bsonType": "string",
+          "description": "微信 unionid，多端共享时使用",
+          "defaultValue": ""
+        },
+        "nickname": {
+          "bsonType": "string",
+          "description": "用户昵称",
+          "defaultValue": "微信用户"
+        },
+        "avatar": {
+          "bsonType": "string",
+          "description": "头像 URL",
+          "defaultValue": ""
+        },
+        "loginType": {
+          "bsonType": "string",
+          "description": "登录方式：wechat / nickname",
+          "defaultValue": "wechat"
+        },
+        "points": {
+          "bsonType": "int",
+          "description": "积分余额",
+          "defaultValue": 0
+        },
+        "totalDraws": {
+          "bsonType": "int",
+          "description": "累计抽签次数",
+          "defaultValue": 0
+        },
+        "drawDays": {
+          "bsonType": "int",
+          "description": "累计抽签天数（有抽签行为的自然日）",
+          "defaultValue": 0
+        },
+        "lastDrawDate": {
+          "bsonType": "string",
+          "description": "最近抽签日期 YYYY-MM-DD，用于判定跨天",
+          "defaultValue": ""
+        },
+        "streakDays": {
+          "bsonType": "int",
+          "description": "连续抽签天数（断签归零），成就「连续三日/七日/风雨无阻」用",
+          "defaultValue": 0
+        },
+        "createdAt": {
+          "bsonType": "long",
+          "description": "注册时间戳（毫秒）"
+        },
+        "lastLoginAt": {
+          "bsonType": "long",
+          "description": "最近登录时间戳（毫秒）"
+        }
+      }
+    }
+  },
+  "records": {
+    "data": [],
+    "schema": {
+      "version": 1,
+      "primaryKey": "_id",
+      "title": "抽签记录表",
+      "description": "每支签的抽签流水，成就系统与跨设备历史的统计数据源",
+      "properties": {
+        "_id": {
+          "bsonType": "string",
+          "description": "系统主键"
+        },
+        "openid": {
+          "bsonType": "string",
+          "description": "归属用户 openid"
+        },
+        "level": {
+          "bsonType": "string",
+          "description": "签文等级，如上上签 / 上吉签 / 中平签 / 蓄力签 / 锦鲤签"
+        },
+        "scene": {
+          "bsonType": "string",
+          "description": "场景 key：daily / exam / work / festival"
+        },
+        "title": {
+          "bsonType": "string",
+          "description": "签文标题"
+        },
+        "dateKey": {
+          "bsonType": "string",
+          "description": "抽签日期 YYYY-MM-DD（北京时间），按日统计用"
+        },
+        "hour": {
+          "bsonType": "int",
+          "description": "抽签小时 0-23（北京时间），时段类成就用"
+        },
+        "createdAt": {
+          "bsonType": "long",
+          "description": "抽签时间戳（毫秒）"
+        }
+      }
+    }
+  },
+  "achievements": {
+    "data": [],
+    "schema": {
+      "version": 1,
+      "primaryKey": "_id",
+      "title": "成就解锁表",
+      "description": "用户已解锁的成就，按 openid + achievementId 唯一，跨设备同步用",
+      "properties": {
+        "_id": {
+          "bsonType": "string",
+          "description": "系统主键"
+        },
+        "openid": {
+          "bsonType": "string",
+          "description": "归属用户 openid"
+        },
+        "achievementId": {
+          "bsonType": "string",
+          "description": "成就 id，与前端 core/achievements.js 的 ACHIEVEMENTS[].id 一一对应"
+        },
+        "unlockedAt": {
+          "bsonType": "long",
+          "description": "解锁时间戳（毫秒）"
+        }
+      }
+    }
+  }
+}
