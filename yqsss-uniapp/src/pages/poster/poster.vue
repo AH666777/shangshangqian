@@ -33,6 +33,7 @@
 import Lottery from '../../modules/lottery.js';
 import Storage from '../../modules/storage.js';
 import Achievement from '../../modules/achievement.js';
+import Share from '../../modules/share.js';
 
 // 画布逻辑尺寸（绘制坐标系）
 const W = 375;
@@ -64,7 +65,7 @@ export default {
 
   // 启用右上角「···」菜单的转发 / 朋友圈分享
   onReady() {
-    uni.showShareMenu({ menus: ['shareAppMessage', 'shareTimeline'] });
+    Share.enableShareMenu();
   },
 
   // 转发给好友：携带已生成的海报图，落地到首页引导对抽签

@@ -129,6 +129,7 @@ import Storage from '../../modules/storage.js';
 import Auth from '../../modules/auth.js';
 import AdSDK, { ADS_ENABLED } from '../../modules/ad.js';
 import Achievement from '../../modules/achievement.js';
+import Share from '../../modules/share.js';
 import RulesCore from '../../core/rules.js';
 
 export default {
@@ -169,7 +170,7 @@ export default {
 
   // 启用右上角「···」菜单的转发 / 朋友圈分享
   onReady() {
-    uni.showShareMenu({ menus: ['shareAppMessage', 'shareTimeline'] });
+    Share.enableShareMenu();
   },
 
   // 转发给好友

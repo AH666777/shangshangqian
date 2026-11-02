@@ -3,25 +3,33 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "一键上上签"
+        "navigationBarTitleText": "一键上上签",
+        "enableShareAppMessage": true,
+        "enableShareTimeline": true
       }
     },
     {
       "path": "pages/shake/shake",
       "style": {
-        "navigationBarTitleText": "摇签"
+        "navigationBarTitleText": "摇签",
+        "enableShareAppMessage": true,
+        "enableShareTimeline": true
       }
     },
     {
       "path": "pages/result/result",
       "style": {
-        "navigationBarTitleText": "解签"
+        "navigationBarTitleText": "解签",
+        "enableShareAppMessage": true,
+        "enableShareTimeline": true
       }
     },
     {
       "path": "pages/poster/poster",
       "style": {
-        "navigationBarTitleText": "分享海报"
+        "navigationBarTitleText": "分享海报",
+        "enableShareAppMessage": true,
+        "enableShareTimeline": true
       }
     },
     {

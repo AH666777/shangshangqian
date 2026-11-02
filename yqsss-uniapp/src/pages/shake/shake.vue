@@ -29,6 +29,7 @@
 import Lottery from '../../modules/lottery.js';
 import Storage from '../../modules/storage.js';
 import AdSDK, { ADS_ENABLED } from '../../modules/ad.js';
+import Share from '../../modules/share.js';
 
 export default {
   data() {
@@ -52,7 +53,7 @@ export default {
 
   // 启用右上角「···」菜单的转发 / 朋友圈分享
   onReady() {
-    uni.showShareMenu({ menus: ['shareAppMessage', 'shareTimeline'] });
+    Share.enableShareMenu();
   },
 
   onShareAppMessage() {
