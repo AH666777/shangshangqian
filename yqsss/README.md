@@ -1,6 +1,10 @@
 # 🏮 一键上上签
 
 > 一个零后端、即开即用的国风抽签小游戏 H5。摇一摇签筒，抽一支属于你的上上签。
+>
+> 项目标识：`shangshangqian`　|　中文品牌：一键上上签
+>
+> 多端版本（uni-app / 微信小程序）与项目总览见 [根目录 README](../README.md)。
 
 [![Status](https://img.shields.io/badge/status-ready--to--deploy-brightgreen)]()
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)]()
@@ -472,9 +476,9 @@ vercel --prod
 
 | 路径 | 说明 |
 | --- | --- |
-| `lottery_game/unpacked/` | 需求文档 `.docx` 的解包副本，原 `.docx` 已保留 |
-| `lottery_game/unpacked_plan/` | 同一文档的第二次解包（正文 MD5 与 `unpacked/` **完全一致**），纯冗余 |
-| `lottery_game/package-lock.json` | 空壳残留（无对应 `package.json`） |
+| `shangshangqian/unpacked/` | 需求文档 `.docx` 的解包副本，原 `.docx` 已保留 |
+| `shangshangqian/unpacked_plan/` | 同一文档的第二次解包（正文 MD5 与 `unpacked/` **完全一致**），纯冗余 |
+| `shangshangqian/package-lock.json` | 空壳残留（无对应 `package.json`） |
 | `yqsss/assets/images/`、`yqsss/assets/audio/` | 空目录 |
 
 ---
