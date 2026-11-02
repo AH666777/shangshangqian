@@ -56,6 +56,12 @@
         <text class="history-item-poem">{{ item.poem }}</text>
       </view>
     </view>
+
+    <!-- 协议入口 -->
+    <view class="legal-links">
+      <text @click="openAgreement('terms')">用户协议</text>
+      <text @click="openAgreement('privacy')">隐私政策</text>
+    </view>
   </view>
 </template>
 
@@ -122,6 +128,10 @@ export default {
 
     goAchievement() {
       uni.navigateTo({ url: '/pages/achievement/achievement' });
+    },
+
+    openAgreement(type) {
+      uni.navigateTo({ url: `/pages/agreement/agreement?type=${type}` });
     },
 
     goHome() {

@@ -75,6 +75,12 @@
       <text>不构成任何命运预测、投资、医疗、婚恋或法律建议，请勿据此做出任何决策。</text>
     </view>
 
+    <!-- 协议入口（始终可见，无需登录，满足合规「显著位置」要求） -->
+    <view class="legal-links">
+      <text @click="openAgreement('terms')">用户协议</text>
+      <text @click="openAgreement('privacy')">隐私政策</text>
+    </view>
+
     <!-- 登录弹窗 -->
     <view v-if="showAuth" class="mask" @click="closeAuthModal">
       <view class="modal-card" @click.stop>
@@ -161,6 +167,28 @@ export default {
     this.refreshState();
   },
 
+  // 启用右上角「···」菜单的转发 / 朋友圈分享
+  onReady() {
+    uni.showShareMenu({ menus: ['shareAppMessage', 'shareTimeline'] });
+  },
+
+  // 转发给好友
+  onShareAppMessage() {
+    Storage.countFeatureEvent('share');
+    Achievement.evaluate({ silent: true });
+    return {
+      title: '一键上上签 - 摇一摇，好运自然来',
+      path: '/pages/index/index',
+    };
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '一键上上签 · 摇一摇，好运自然来',
+    };
+  },
+
   methods: {
     refreshState() {
       this.remaining = Storage.getRemainingDraws();
@@ -178,6 +206,10 @@ export default {
 
     goHistory() {
       uni.navigateTo({ url: '/pages/history/history' });
+    },
+
+    openAgreement(type) {
+      uni.navigateTo({ url: `/pages/agreement/agreement?type=${type}` });
     },
 
     onProfileClick() {

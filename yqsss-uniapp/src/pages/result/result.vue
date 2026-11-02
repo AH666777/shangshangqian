@@ -50,6 +50,7 @@
       <!-- 操作按钮 -->
       <view style="margin-top: 32rpx;">
         <view class="btn-primary btn-red" @click="goPoster">🎨 生成分享海报</view>
+        <button open-type="share" class="btn-share">📤 分享给好友</button>
         <view class="btn-ghost" @click="again">🔄 再摇一签</view>
       </view>
     </template>
@@ -122,6 +123,32 @@ export default {
     // 取走待展示的解锁列表（取走即清空，返回上一页不会重复弹）。
     // onLoad 在本页 scene 未就绪时也可能先跑，统一放在 onShow 消费最稳。
     this.unlockedList = Achievement.takePending();
+  },
+
+  // 启用右上角「···」菜单的转发 / 朋友圈分享
+  onReady() {
+    uni.showShareMenu({ menus: ['shareAppMessage', 'shareTimeline'] });
+  },
+
+  // 转发给好友：以当前签文为卖点，落地到首页引导对抽签
+  onShareAppMessage() {
+    // 分享即埋点，供成就「广结善缘」判定（silent：不弹窗，避免打断分享）
+    Storage.countFeatureEvent('share');
+    Achievement.evaluate({ silent: true });
+    const f = this.fortune;
+    return {
+      title: f ? `我抽到了「${f.title}」（${f.level}），你也来摇一签~` : '一键上上签 - 摇一摇，好运自然来',
+      path: '/pages/index/index',
+    };
+  },
+
+  // 分享到朋友圈（仅支持 title / query，不支持 imageUrl）
+  onShareTimeline() {
+    const f = this.fortune;
+    return {
+      title: f ? `一键上上签 · 我摇到了「${f.title}」` : '一键上上签',
+      query: '',
+    };
   },
 
   methods: {

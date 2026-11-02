@@ -21,6 +21,7 @@
     </view>
 
     <view class="btn-primary" @click="save">💾 保存海报到相册</view>
+    <button open-type="share" class="btn-share">📤 分享给好友</button>
     <text class="tip-note">保存后可长按图片存入相册（微信内请长按保存）</text>
 
     <!-- 离屏画布：仅用于生成图片，不参与可见布局 -->
@@ -59,6 +60,32 @@ export default {
     this.$nextTick(() => {
       setTimeout(() => this.render(), 100);
     });
+  },
+
+  // 启用右上角「···」菜单的转发 / 朋友圈分享
+  onReady() {
+    uni.showShareMenu({ menus: ['shareAppMessage', 'shareTimeline'] });
+  },
+
+  // 转发给好友：携带已生成的海报图，落地到首页引导对抽签
+  onShareAppMessage() {
+    Storage.countFeatureEvent('share');
+    Achievement.evaluate({ silent: true });
+    const f = this.fortune;
+    const share = {
+      title: f ? `我在「一键上上签」摇到了「${f.title}」` : '一键上上签',
+      path: '/pages/index/index',
+    };
+    if (this.posterPath) share.imageUrl = this.posterPath;
+    return share;
+  },
+
+  // 分享到朋友圈（仅支持 title / query，不支持 imageUrl）
+  onShareTimeline() {
+    const f = this.fortune;
+    return {
+      title: f ? `一键上上签 · 我摇到了「${f.title}」` : '一键上上签',
+    };
   },
 
   methods: {

@@ -50,6 +50,25 @@ export default {
     this.stopAccelerometer();
   },
 
+  // 启用右上角「···」菜单的转发 / 朋友圈分享
+  onReady() {
+    uni.showShareMenu({ menus: ['shareAppMessage', 'shareTimeline'] });
+  },
+
+  onShareAppMessage() {
+    Storage.countFeatureEvent('share');
+    return {
+      title: '一键上上签 - 摇一摇，好运自然来',
+      path: '/pages/index/index',
+    };
+  },
+
+  onShareTimeline() {
+    return {
+      title: '一键上上签 · 摇一摇，好运自然来',
+    };
+  },
+
   methods: {
     stickStyle(i) {
       const angles = [-5, 3, -2, 6, -4];

@@ -254,8 +254,8 @@ export const ACHIEVEMENTS = [
   },
   {
     id: 'poster_5', name: '广结善缘', icon: '🤝', tier: 'silver', group: 'F',
-    desc: '累计生成分享海报 5 次', target: 5,
-    value: (sum) => sum.posterCount,
+    desc: '累计分享 5 次', target: 5,
+    value: (sum) => sum.shareCount,
   },
   {
     id: 'streak_3', name: '连续三日', icon: '🔥', tier: 'silver', group: 'F',
@@ -562,6 +562,7 @@ export function buildSummary(input) {
 
     deepAnalysisCount: events.deepAnalysis || 0,
     posterCount: events.poster || 0,
+    shareCount: events.share || 0,
 
     premiumUnlocked: !!features.premiumFortunes,
     unlimitedUnlocked: !!features.unlimitedDraws,

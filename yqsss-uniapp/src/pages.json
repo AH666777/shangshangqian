@@ -41,6 +41,12 @@
       "style": {
         "navigationBarTitleText": "我的成就"
       }
+    },
+    {
+      "path": "pages/agreement/agreement",
+      "style": {
+        "navigationBarTitleText": "协议"
+      }
     }
   ],
   "globalStyle": {

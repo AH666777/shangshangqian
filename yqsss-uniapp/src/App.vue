@@ -158,6 +158,39 @@ page {
 }
 .btn-small:active { opacity: 0.85; }
 
+/* 分享按钮（open-type="share" 的原生 button 需重置默认白底与边框） */
+.btn-share {
+  width: 100%;
+  padding: 24rpx 0;
+  margin-top: 20rpx;
+  text-align: center;
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1rpx solid rgba(212, 160, 23, 0.5);
+  color: #FFD133;
+  font-size: 30rpx;
+  font-weight: bold;
+  letter-spacing: 2rpx;
+  line-height: 1.5;
+}
+.btn-share::after { border: none; }
+.btn-share:active { background: rgba(212, 160, 23, 0.12); }
+
+/* 协议入口（页脚） */
+.legal-links {
+  display: flex;
+  justify-content: center;
+  margin-top: 40rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.08);
+}
+.legal-links text {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 12rpx;
+}
+.legal-links text:active { color: #FFD133; }
+
 /* ---------- 今日信息 ---------- */
 .today-info { text-align: center; font-size: 24rpx; color: rgba(255, 255, 255, 0.45); }
 .gold { color: #FFD133; font-weight: bold; }
