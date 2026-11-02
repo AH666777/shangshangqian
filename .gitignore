@@ -34,5 +34,7 @@ Thumbs.db
 # ============ 运行时缓存 ============
 .hbuilderx/launch.json
 
-# ============ 本地备份快照（不入库） ============
-.workbuddy/backup/
+# ============ 本地工作数据（已被 OneDrive 同步，禁止入库） ============
+# 工作区位于 OneDrive 目录，.workbuddy 已由云盘同步，
+# 纳入 git 只会产生无意义的“已修改”噪声，故整体忽略。
+.workbuddy/
