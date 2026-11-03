@@ -10,5 +10,21 @@
       ],
       "MgoIsUnique": false
     }
+  },
+  {
+    "IndexName": "idx_openid_achievement",
+    "MgoKeySchema": {
+      "MgoIndexKeys": [
+        {
+          "Name": "openid",
+          "Direction": "1"
+        },
+        {
+          "Name": "achievementId",
+          "Direction": "1"
+        }
+      ],
+      "MgoIsUnique": true
+    }
   }
 ]

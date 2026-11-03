@@ -8,7 +8,7 @@
           "Direction": "1"
         }
       ],
-      "MgoIsUnique": false
+      "MgoIsUnique": true
     }
   }
 ]

@@ -2,6 +2,7 @@
   "name": "shangshangqian-uniapp",
   "version": "0.0.0",
   "scripts": {
+    "test": "node smoke/achievements.test.mjs && node smoke/achievement-flow.test.mjs && node smoke/cloud-auth.test.cjs",
     "dev:custom": "uni -p",
     "dev:h5": "uni",
     "dev:h5:ssr": "uni --ssr",

@@ -73,35 +73,17 @@ const Auth = {
 
   // ========== 微信登录（uniCloud 云函数） ==========
   // 流程：uni.login() 取 code → 云函数 yqsss-auth 换 openid → 按 openid 读写 users 表。
-  // 云函数返回的是云端真实档案（含 _id、points 等），前端只做缓存。
+  // 云函数返回的是云端真实档案（含 _id、points 等），前端只做缓存；
+  // 同时返回一枚服务端签发的 token，后续所有云端调用只带它，不再传 openid。
   async loginWithWechat() {
-    if (!this._cloudAvailable()) {
-      return { success: false, message: '当前环境未接入云函数，请改用昵称登录' };
-    }
-
-    const code = await this._wxLoginCode();
-    if (!code) {
-      return { success: false, message: '获取微信凭证失败' };
-    }
-
-    let result = {};
-    try {
-      const res = await uniCloud.callFunction({
-        name: 'yqsss-auth',
-        data: { action: 'wxLogin', code },
-      });
-      result = (res && res.result) || {};
-    } catch (e) {
-      return { success: false, message: '云函数调用失败，请确认已上传部署' };
-    }
-
-    if (result.code !== 0 || !result.user || !result.user.openid) {
-      return { success: false, message: result.message || '微信登录失败' };
+    const session = await this._requestWxSession();
+    if (!session.ok) {
+      return { success: false, message: session.message };
     }
 
     // 云端真实档案写到本地，作为离线缓存。
     // 本地 id 用 'wx_' + openid，跨设备复用同一身份。
-    const remote = result.user;
+    const remote = session.body.user;
     const uid = 'wx_' + remote.openid;
     this._user = {
       id: uid,
@@ -115,21 +97,89 @@ const Auth = {
       totalDraws: remote.totalDraws || 0,
       createdAt: remote.createdAt ? new Date(remote.createdAt).toISOString() : new Date().toISOString(),
       lastLoginAt: remote.lastLoginAt ? new Date(remote.lastLoginAt).toISOString() : '',
+      token: session.body.token,
+      tokenExpiresAt: session.body.expiresAt || 0,
     };
 
     this._saveUser(this._user);
     this._save();
     this._notifyListeners(true, this._user);
-    return { success: true, user: this._user, isNew: !!result.isNew };
+    return { success: true, user: this._user, isNew: !!session.body.isNew };
+  },
+
+  // ---------- 与云函数换取一次登录会话（不改变当前用户） ----------
+  async _requestWxSession() {
+    if (!this._cloudAvailable()) {
+      return { ok: false, message: '当前环境未接入云函数，请改用昵称登录' };
+    }
+
+    const code = await this._wxLoginCode();
+    if (!code) {
+      return { ok: false, message: '获取微信凭证失败' };
+    }
+
+    let result = {};
+    try {
+      const res = await uniCloud.callFunction({
+        name: 'yqsss-auth',
+        data: { action: 'wxLogin', code },
+      });
+      result = (res && res.result) || {};
+    } catch (e) {
+      return { ok: false, message: '云函数调用失败，请确认已上传部署' };
+    }
+
+    if (result.code !== 0 || !result.user || !result.user.openid) {
+      return { ok: false, message: result.message || '微信登录失败' };
+    }
+    // 旧版云函数（未升级）不会返回 token，这里必须显式失败——
+    // 否则后续请求会持续收到 7001，用户只会看到「同步失败」而无从排查。
+    if (!result.token) {
+      return { ok: false, message: '云函数版本过旧，未返回登录凭证，请重新上传部署 yqsss-auth' };
+    }
+    return { ok: true, body: result };
+  },
+
+  // ---------- 登录凭证是否仍在有效期内 ----------
+  // 提前 1 分钟判过期，避免请求发出时刚好跨过 exp。
+  _tokenValid() {
+    const token = this._user && this._user.token;
+    const exp = this._user && this._user.tokenExpiresAt;
+    return !!token && typeof exp === 'number' && exp - 60000 > Date.now();
+  },
+
+  // 供其他模块取用的凭证；没有则返回空串。
+  getCloudToken() {
+    return (this._user && this._user.token) || '';
+  },
+
+  // ---------- 确保云端会话可用（必要时静默续期） ----------
+  // 微信登录的 code 可以随时重新获取，续期对用户完全无感：
+  // 不弹窗、不改变身份、不通知 UI 监听器。
+  async ensureCloudSession() {
+    if (!this.isWechatLogin() || !this._cloudAvailable()) return false;
+    if (this._tokenValid()) return true;
+
+    const session = await this._requestWxSession();
+    if (!session.ok) return false;
+
+    const remote = session.body.user;
+    this._user.token = session.body.token;
+    this._user.tokenExpiresAt = session.body.expiresAt || 0;
+    this._user._id = remote._id || this._user._id || '';
+    // 积分以服务端为准（服务端已禁止客户端写入），顺手同步一次
+    this._user.points = remote.points || 0;
+    this._save();
+    this._saveUser(this._user);
+    return true;
   },
 
   // ========== 云端同步：统计回传 ==========
-  // 抽签后调用，把本地统计整体覆盖到 users 表。
+  // 抽签后调用，把本地统计回传 users 表（服务端只取较大值，且拒绝 points）。
   // 静默失败——网络异常不能影响本地抽签体验，失败不影响继续使用。
   async syncStatsToCloud() {
     if (!this.isWechatLogin() || !this._cloudAvailable()) return false;
-    const openid = this._user?.openid;
-    if (!openid) return false;
+    if (!await this.ensureCloudSession()) return false;
 
     const stats = this.getProfileStats();
     try {
@@ -137,7 +187,7 @@ const Auth = {
         name: 'yqsss-auth',
         data: {
           action: 'updateStats',
-          openid,
+          token: this.getCloudToken(),
           stats: {
             totalDraws: stats.totalDraws,
             drawDays: stats.drawDays,
@@ -156,15 +206,15 @@ const Auth = {
   // 与统计回传分开，便于后期单独关闭或调整上报粒度。
   async pushRecordToCloud(fortune, scene) {
     if (!this.isWechatLogin() || !this._cloudAvailable()) return false;
-    const openid = this._user?.openid;
-    if (!openid || !fortune) return false;
+    if (!fortune) return false;
+    if (!await this.ensureCloudSession()) return false;
 
     try {
       await uniCloud.callFunction({
         name: 'yqsss-auth',
         data: {
           action: 'saveRecord',
-          openid,
+          token: this.getCloudToken(),
           level: fortune.level || '',
           scene: scene || 'daily',
           title: fortune.title || '',

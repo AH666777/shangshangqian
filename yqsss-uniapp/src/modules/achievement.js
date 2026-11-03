@@ -176,17 +176,16 @@ const Achievement = {
   },
 
   // 上报已解锁的成就 id。云函数侧做了「查重 + 只补缺失」，重复调用幂等。
+  // 身份由 token 决定，不再往请求里塞 openid（服务端会拒绝跨账号的 openid）。
   async _pushToCloud(ids) {
     if (!ids || ids.length === 0) return false;
     if (!Auth.isWechatLogin() || !this._cloudAvailable()) return false;
-    const user = Auth.getUser();
-    const openid = user && user.openid;
-    if (!openid) return false;
+    if (!await Auth.ensureCloudSession()) return false;
 
     try {
       await uniCloud.callFunction({
         name: 'yqsss-auth',
-        data: { action: 'unlockAchievement', openid, achievementIds: ids },
+        data: { action: 'unlockAchievement', token: Auth.getCloudToken(), achievementIds: ids },
       });
       return true;
     } catch (e) {
@@ -205,15 +204,13 @@ const Achievement = {
   // 避免「事后补算」把时间刷成今天。
   async syncWithCloud() {
     if (!Auth.isWechatLogin() || !this._cloudAvailable()) return { merged: 0, pushed: 0 };
-    const user = Auth.getUser();
-    const openid = user && user.openid;
-    if (!openid) return { merged: 0, pushed: 0 };
+    if (!await Auth.ensureCloudSession()) return { merged: 0, pushed: 0 };
 
     let list = [];
     try {
       const res = await uniCloud.callFunction({
         name: 'yqsss-auth',
-        data: { action: 'getAchievements', openid },
+        data: { action: 'getAchievements', token: Auth.getCloudToken() },
       });
       const body = (res && res.result) || {};
       if (body.code !== 0 || !Array.isArray(body.list)) return { merged: 0, pushed: 0 };
