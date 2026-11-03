@@ -1,2 +1,0 @@
-AppID(小程序ID) wx5a7366b5deaa5ac8
-AppSecret(小程序密钥) <已清除，请勿明文记录 — 请在微信公众平台重置后填入 yqsss-uniapp/uniCloud-alipay/cloudfunctions/yqsss-auth/.env>

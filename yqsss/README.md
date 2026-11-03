@@ -478,7 +478,7 @@ vercel --prod
 
 | 路径（历史） | 原说明 | 现状 |
 | --- | --- | --- |
-| 根目录 `unpacked/` | 需求文档 `.docx` 的解包副本 | ✅ 已清理，根目录仅保留原 `.docx`（`上上签随机抽签小游戏 命名方案+完整开发落地计划.docx`） |
+| 根目录 `unpacked/` | 需求文档 `.docx` 的解包副本 | ✅ 已清理，原 `.docx` 现归档于 `docs/planning/上上签随机抽签小游戏 命名方案+完整开发落地计划.docx` |
 | 根目录 `unpacked_plan/` | 同一文档的第二次解包，正文与 `unpacked/` 完全一致，纯冗余 | ✅ 已清理 |
 | 根目录 `package-lock.json` 空壳 | 无对应 `package.json` 的空壳残留 | ✅ 已清理 |
 | `yqsss/assets/images/`、`yqsss/assets/audio/` | 早期规划的空资源目录 | ✅ 已清理；当前 `yqsss/assets/` 仅含 `icon.svg` |

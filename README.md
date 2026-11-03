@@ -23,8 +23,8 @@
 | --- | --- | --- | --- |
 | `yqsss/` | H5 子工程 | 原生 JavaScript + Tailwind CSS + Vitest | 双击 `index.html` 即可运行，无打包步骤 |
 | `yqsss-uniapp/` | uni-app 子工程 | Vue 3 + uni-app + Vite | 微信小程序为主目标，含 `uniCloud-alipay` 云函数 |
-| `docs/` | 工程文档 | Markdown | 发布前检查清单等 |
-| `.workbuddy/` | 本地工作数据 | — | 历史备份与工作日志，不参与构建，请勿删除 |
+| `docs/` | 工程文档 | Markdown | 规划 / 评审 / 运维三类文档，索引见 [`docs/README.md`](docs/README.md) |
+| `.workbuddy/` | 本地工作数据 | — | **仅存在于本地**，已在 `.gitignore` 中排除，不入库、不参与构建，请勿删除 |
 
 ### 目录结构
 
@@ -33,8 +33,11 @@ shangshangqian/
 ├── README.md                       # 本文件：项目总览与命名规约
 ├── project.config.json             # 微信开发者工具项目配置（appid）
 ├── project.private.config.json     # 本地项目配置（projectname = shangshangqian）
-├── docs/
-│   └── 发布前检查清单.md
+├── docs/                           # 项目文档（全部文档集中于此）
+│   ├── README.md                   # 文档索引
+│   ├── planning/                   # 需求 / 方案 / 成就 / 商业化规划
+│   ├── reports/                    # 审计报告、发布前检查清单
+│   └── operations/                 # 云函数部署与验证记录
 ├── yqsss/                          # H5 版
 │   ├── index.html                  # 唯一入口
 │   ├── js/
@@ -158,18 +161,25 @@ node smoke/achievements.test.mjs     # 成就规则与云函数契约
 | 微信小程序 | `npm run build:mp-weixin` 后，用微信开发者工具导入 `dist/build/mp-weixin` 上传 |
 | App / 其他小程序 | 使用对应的 `build:mp-*` / `build:app-*` 脚本，详见 `yqsss-uniapp/package.json` |
 
-上线前请对照 `docs/发布前检查清单.md` 逐项确认（AppSecret、隐私指引、ICP 备案、云函数部署等）。
+上线前请对照 `docs/reports/发布前检查清单.md` 逐项确认（AppSecret、隐私指引、ICP 备案、云函数部署等）。
 
 ---
 
 ## 📚 文档索引
 
+全部文档集中在 [`docs/`](docs/README.md)，按「规划 / 评审 / 运维」三类归档。
+
 | 文档 | 内容 |
 | --- | --- |
+| [`docs/README.md`](docs/README.md) | 文档总索引与归档约定 |
+| [`docs/planning/ACHIEVEMENT_PLAN.md`](docs/planning/ACHIEVEMENT_PLAN.md) | 成就系统设计与落地方案 |
+| [`docs/planning/ACHIEVEMENT_FUN_PROPOSAL.md`](docs/planning/ACHIEVEMENT_FUN_PROPOSAL.md) | 彩蛋成就提案 |
+| [`docs/planning/小程序多平台发布与商业化计划书.md`](docs/planning/小程序多平台发布与商业化计划书.md) | 多平台发布策略与商业化路径 |
+| [`docs/planning/上上签随机抽签小游戏 命名方案+完整开发落地计划.docx`](docs/planning/上上签随机抽签小游戏%20命名方案+完整开发落地计划.docx) | 立项需求与命名方案原始文档 |
+| [`docs/reports/项目代码与测试审计报告.md`](docs/reports/项目代码与测试审计报告.md) | 代码质量、问题分级与修复记录 |
+| [`docs/reports/发布前检查清单.md`](docs/reports/发布前检查清单.md) | 提审与上线前的逐项核查清单 |
+| [`docs/operations/云函数部署与登录验证记录.md`](docs/operations/云函数部署与登录验证记录.md) | 云函数部署、环境变量与登录验证 |
 | [`yqsss/README.md`](yqsss/README.md) | H5 版完整说明：功能、架构、存储结构、抽签规则、测试与部署 |
-| [`docs/发布前检查清单.md`](docs/发布前检查清单.md) | 提审与上线前的逐项核查清单 |
-| [`小程序多平台发布与商业化计划书.md`](小程序多平台发布与商业化计划书.md) | 多平台发布策略与商业化路径 |
-| [`ACHIEVEMENT_PLAN.md`](ACHIEVEMENT_PLAN.md) | 成就系统设计与落地方案 |
 
 ---
 
