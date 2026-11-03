@@ -305,3 +305,37 @@ describe('全链路冒烟：登录 -> 抽签 -> 历史 -> 深度解签', () => {
     expect(() => evalInContext('updateRemainDisplay()')).not.toThrow();
   });
 });
+
+// ============================================
+// 回归：审计报告 P1-4 / P1-5
+// ============================================
+describe('回归：改名身份一致性与模板转义', () => {
+  it('改名后按新昵称可登回同一档案，旧昵称不再指向该身份（P1-4）', () => {
+    const first = evalInContext('Auth.login("回归-原昵称")');
+    expect(first.success).toBe(true);
+    const uid = first.user.id;
+
+    expect(evalInContext('Auth.updateNickname("回归-新昵称")')).toBe(true);
+    evalInContext('Auth.logout()');
+
+    // 新昵称：必须复用同一 id，不得被判为新用户
+    const byNew = evalInContext('Auth.login("回归-新昵称")');
+    expect(byNew.isNew).toBe(false);
+    expect(byNew.user.id).toBe(uid);
+
+    evalInContext('Auth.logout()');
+
+    // 旧昵称：改名后已释放，应作为新用户注册，而不是登回改名后的那个人
+    const byOld = evalInContext('Auth.login("回归-原昵称")');
+    expect(byOld.user.id).not.toBe(uid);
+  });
+
+  it('个人主页日期标签经 HTML 转义（P1-5）', () => {
+    const html = evalInContext(
+      'ViewModel.buildProfileHistoryHtml({ "<img src=x onerror=alert(1)>": '
+      + '[{ level: "上上签", title: "t", createdAt: "2026-03-01T12:00:00" }] })'
+    );
+    expect(html).not.toContain('<img');
+    expect(html).toContain('&lt;img');
+  });
+});

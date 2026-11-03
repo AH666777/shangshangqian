@@ -103,7 +103,7 @@ const ViewModel = {
       return `
       <div class="profile-date-group">
         <div class="flex items-center gap-2 mb-2 px-1">
-          <span class="text-xs font-bold text-gold-400">${dateLabel}</span>
+          <span class="text-xs font-bold text-gold-400">${__RulesForVM.escapeHtml(dateLabel)}</span>
           <span class="text-xs text-white/30">${weekday}</span>
           <span class="flex-1 h-px bg-white/10"></span>
           <span class="text-xs text-white/30">${records.length}签</span>

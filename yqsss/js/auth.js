@@ -12,7 +12,7 @@ const Auth = {
   KEYS: {
     USER: 'yqsss_user',
     STATS: 'yqsss_stats',
-    USERS: 'yqsss_users',       // 昵称 -> 用户档案，保证同名登录复用同一身份
+    USERS: 'yqsss_users',       // id -> 用户档案，保证同一身份复用同一条档案
     LAST_ACTIVE: 'yqsss_last_active_date',
   },
 
@@ -51,8 +51,9 @@ const Auth = {
     const existing = this._getUserByName(name);
 
     if (existing) {
-      // 老用户登录
+      // 老用户登录。顺手回写一次：早期档案以昵称为 key，这里迁到 id 主键上。
       this._user = existing;
+      this._saveUser(existing);
     } else {
       // 新用户注册
       this._user = {
@@ -68,20 +69,34 @@ const Auth = {
     return { success: true, user: this._user, isNew: !existing };
   },
 
-  // ========== 用户档案表（按昵称索引） ==========
+  // ========== 用户档案表（以 id 为主键，兼容早期按昵称索引的数据） ==========
   _getUsers() {
     return Storage.get(this.KEYS.USERS, {}) || {};
   },
 
   _saveUser(user) {
     const users = this._getUsers();
-    users[user.nickname] = user;
+    // 迁移早期以昵称为 key 的旧档：同一 id 的旧条目先清掉，
+    // 否则改名后一条身份会同时占着旧昵称槽位，下次按旧昵称登录会登进同一人。
+    Object.keys(users).forEach((key) => {
+      if (key !== user.id && users[key] && users[key].id === user.id) {
+        delete users[key];
+      }
+    });
+    users[user.id] = user;
     Storage.set(this.KEYS.USERS, users);
+  },
+
+  _getUserById(id) {
+    const hit = this._getUsers()[id];
+    return hit && hit.id === id ? hit : null;
   },
 
   _getUserByName(nickname) {
     const users = this._getUsers();
-    return users[nickname] || null;
+    const direct = users[nickname];
+    if (direct && direct.nickname === nickname) return direct;
+    return Object.values(users).find(u => u && u.nickname === nickname) || null;
   },
 
   _save() {
@@ -121,6 +136,9 @@ const Auth = {
   updateNickname(nickname) {
     if (!this._user || !nickname.trim()) return false;
     this._user.nickname = nickname.trim();
+    // 档案表以 id 为主键，需同步回写；否则新昵称只存在于当前会话，
+    // 退出后按新昵称登不回来（会被当成新用户）。
+    this._saveUser(this._user);
     this._save();
     this._notifyListeners(true, this._user);
     return true;

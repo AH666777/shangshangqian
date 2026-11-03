@@ -262,26 +262,33 @@ async function doShake() {
       if (hint) hint.textContent = '👆 点击签筒摇一摇';
 
       // 执行抽签
-      const result = await Lottery.draw(selectedScene);
+      // try/finally 保证异常时也解锁 isDrawing——否则摇签按钮会永久失效，只能刷新页面。
+      let result;
+      try {
+        result = await Lottery.draw(selectedScene);
 
-      if (result.success) {
-        // 撒花
-        if (barrelRect) {
-          spawnParticles(
-            barrelRect.left + barrelRect.width / 2,
-            barrelRect.top + barrelRect.height / 2,
-            30
-          );
+        if (result.success) {
+          // 撒花
+          if (barrelRect) {
+            spawnParticles(
+              barrelRect.left + barrelRect.width / 2,
+              barrelRect.top + barrelRect.height / 2,
+              30
+            );
+          }
+          goResult();
+        } else if (result.reason === 'limit_reached') {
+          showNoDrawsDialog();
+          goHome();
+        } else {
+          Toast.show(result.message || '抽签失败，请重试');
         }
-        goResult();
-      } else if (result.reason === 'limit_reached') {
-        showNoDrawsDialog();
-        goHome();
-      } else {
-        Toast.show(result.message || '抽签失败，请重试');
+      } catch (e) {
+        console.error('抽签流程异常:', e);
+        Toast.show('抽签失败，请重试');
+      } finally {
+        Lottery.isDrawing = false;
       }
-
-      Lottery.isDrawing = false;
     }, 1200);
   }, 1800);
 }

@@ -10,7 +10,6 @@ import RulesCore from '../core/rules.js';
 import FORTUNE_DATA from '../core/fortunes.js';
 import Storage from './storage.js';
 import Achievement from './achievement.js';
-import { ADS_ENABLED } from './ad.js';
 
 const { FORTUNES, SCENE_FORTUNES, PREMIUM_FORTUNES } = FORTUNE_DATA;
 
@@ -67,12 +66,9 @@ const Lottery = {
     Storage.incrementTodayCount();
     Storage.saveRecord(result.fortune, this.currentScene);
 
-    // 深度解签在广告关闭时为免费功能（result.vue 免费展示），每支签计一次
-    // 「使用深度解签」事件，使成就 first_deep / deep_10 在免费模式下也能正常解锁。
-    // 开启广告后此路径失效，由 watchAdForReward('deep_analysis') 负责埋点，二者互斥。
-    if (!ADS_ENABLED) {
-      Storage.countFeatureEvent('deepAnalysis');
-    }
+    // 深度解签的「使用」事件不在这里记：出签只是抽签，还没展示深度解读。
+    // 计数改由结果页在实际展示深度解签时完成（见 pages/result/result.vue），
+    // 否则 first_deep / deep_10 会随抽签次数自动达成，与用户是否真看无关。
 
     // 成就判定：放在落盘之后——此时统计已自增、记录已入历史，数据最准。
     // 判定同步且轻量，内部静默失败，不会拖慢或打断出签。

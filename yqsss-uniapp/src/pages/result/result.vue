@@ -104,6 +104,8 @@ export default {
   onLoad() {
     this.fortune = Lottery.getCurrentFortune();
     this.scene = Lottery.currentScene;
+    // 同一支签的深度解签只计一次事件（返回/再次 onShow 不重复计）
+    this._deepCounted = false;
 
     // 页内解锁（看广告解锁深度解签 / 高级签 / 无限抽签）时实时弹窗。
     // 此时 onShow 早已执行过，光靠 takePending() 拿不到，所以走订阅。
@@ -123,7 +125,10 @@ export default {
     this.refreshUnlock();
     // 取走待展示的解锁列表（取走即清空，返回上一页不会重复弹）。
     // onLoad 在本页 scene 未就绪时也可能先跑，统一放在 onShow 消费最稳。
-    this.unlockedList = Achievement.takePending();
+    // 仅在有新内容时覆盖：本页内刚解锁的成就已由 onUnlock 订阅写入，
+    // 此时 takePending() 为空，无条件赋值会把弹窗清掉。
+    const pending = Achievement.takePending();
+    if (pending.length) this.unlockedList = pending;
   },
 
   // 启用右上角「···」菜单的转发 / 朋友圈分享
@@ -157,6 +162,17 @@ export default {
       // 广告关闭期间深度解签免费全开，避免「有钩子但无解锁途径」的死路；
       // 广告恢复后自动切回「看广告解锁」逻辑，无需改动本行。
       this.deepUnlocked = ADS_ENABLED ? Storage.isFeatureUnlocked('deepAnalysis') : true;
+      this.countDeepViewIfNeeded();
+    },
+
+    // 深度解签事件埋点：只在「真的展示给用户」时计一次，同一支签去重。
+    // 广告开启时由 AdSDK.watchAdForReward('deep_analysis') 负责计数，此处不重复计。
+    countDeepViewIfNeeded() {
+      if (!this.deepUnlocked || this._deepCounted) return;
+      this._deepCounted = true;
+      if (ADS_ENABLED) return;
+      Storage.countFeatureEvent('deepAnalysis');
+      Achievement.evaluate();
     },
     goHome() {
       uni.reLaunch({ url: '/pages/index/index' });

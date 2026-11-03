@@ -115,6 +115,7 @@ function makeContext(metric, n) {
     case 'maxDayDraws': for (let i = 0; i < n; i++) push('上上签', 'daily', '12:00:00', '2026-03-01'); break;
     case 'deepAnalysisCount': ctx.events.deepAnalysis = n; break;
     case 'posterCount': ctx.events.poster = n; break;
+    case 'shareCount': ctx.events.share = n; break;
     case 'premiumUnlocked': ctx.features.premiumFortunes = n >= 1; break;
     case 'unlimitedUnlocked': ctx.features.unlimitedDraws = n >= 1; break;
     case 'wechatLogin': ctx.isWechatLogin = n >= 1; break;
@@ -180,7 +181,7 @@ const METRIC_OF = {
   morning_draw: 'morningCount', night_draw: 'nightCount', day_5: 'maxDayDraws',
   first_deep: 'deepAnalysisCount', premium_unlock: 'premiumUnlocked',
   unlimited_unlock: 'unlimitedUnlocked', wechat_login: 'wechatLogin',
-  deep_10: 'deepAnalysisCount', poster_1: 'posterCount', poster_5: 'posterCount',
+  deep_10: 'deepAnalysisCount', poster_1: 'posterCount', poster_5: 'shareCount',
   streak_3: 'streakDays', streak_7: 'streakDays', streak_30: 'streakDays',
 
   // G 档·连击型
@@ -265,7 +266,7 @@ add('上上签', 'daily', '18:00:00', 10);
 const fullSummary = buildSummary({
   records: fullRecords,
   stats: { totalDraws: 400, drawDays: 40, streakDays: 40 },
-  events: { deepAnalysis: 12, poster: 6 },
+  events: { deepAnalysis: 12, poster: 6, share: 6 },
   features: { premiumFortunes: true, unlimitedDraws: true },
   isWechatLogin: true,
 });
