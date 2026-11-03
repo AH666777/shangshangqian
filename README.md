@@ -114,15 +114,17 @@ cd yqsss
 npm test
 ```
 
-当前覆盖 4 个测试文件、92 条用例：纯逻辑单元测试、按 `index.html` 真实顺序装载的经典脚本冒烟测试、脚本静态约束、Tailwind 类名构建一致性。
+当前覆盖 4 个测试文件、94 条用例：纯逻辑单元测试、按 `index.html` 真实顺序装载的经典脚本冒烟测试、脚本静态约束、Tailwind 类名构建一致性。
 
 ### uni-app 版（Node 冒烟）
 
 ```bash
 cd yqsss-uniapp
+npm test                             # 一次跑完下面三个
 node smoke/test.mjs                  # 四场景各抽 500 次 + 次数限制
 node smoke/achievement-flow.test.mjs # 成就链路
 node smoke/achievements.test.mjs     # 成就规则与云函数契约
+node smoke/cloud-auth.test.cjs       # 云函数鉴权与数据校验（14 条）
 ```
 
 > 修改 `src/core/` 后必须保证 H5 与 uni-app 两侧测试同时为绿：两套内核逻辑同源，任一侧漂移都会造成多端行为不一致。
